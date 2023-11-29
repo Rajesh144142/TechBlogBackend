@@ -5,18 +5,18 @@ import cookieParser from 'cookie-parser';
 import DbConnect from './dbConnection/DbConnect.js';
 import router from './Routes/AuthRoute.js'
 import multer from 'multer';
-dotenv.config();
 
 const app = express();
 
 
 
 
-app.use(cors({ credentials: true, origin: process.env.CORS_ORIGIN }));
+app.use(cors({ credentials: true}));
 app.use(express.json({ limit: "16kb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
-app.use(express.static("public"))
+app.use(express.static('public'))
+dotenv.config();
 app.use(express.static('dist'));
 
 
