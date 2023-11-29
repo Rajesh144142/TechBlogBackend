@@ -4,8 +4,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import DbConnect from './dbConnection/DbConnect.js';
 import router from './Routes/AuthRoute.js'
-import multer from 'multer';
-
 const app = express();
 
 
