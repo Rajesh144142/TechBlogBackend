@@ -12,5 +12,5 @@ router.delete('/auth/logout', userController.logout);
 router.post('/create', upload.single('file'),postController.createPost);
 router.get('/post',postController.getAllPost);
 router.get('/post/:id',postController.getAPost)
-
+router.put('/edit/:id',upload.single('file'),postController.UpdatePost)
 export default router;
