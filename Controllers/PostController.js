@@ -57,17 +57,15 @@ export async function UpdatePost(req, res) {
         if (!postDoc) {
             return res.status(404).json({ msg: 'Post not found' });
         }
-
         const isAuthor = postDoc.author.toString() === info.id;
-
         if (!isAuthor) {
             return res.status(403).json({ msg: 'You are not the author' });
         }
 
-        const updatedPost = await PostModel.findOneAndUpdate(
+        const updatedPost = await PostModel.updateOne(
             { _id: id },
             { title, summary, content, cover: newPath ? newPath.url : postDoc.cover },
-            { new: true } 
+            { new: true }
         );
 
         res.status(200).json(updatedPost);
@@ -78,7 +76,21 @@ export async function UpdatePost(req, res) {
 }
 
 
+export async function deletePost(req, res) {
+    try {
+        const { id } = req.params;
+        const { token } = req.cookies;
+        const isValid = jwt.verify(token, process.env.JWT_SECRET);
 
+        if (!isValid) {
+            res.status(400).json({ msg: 'Invalid token' });
+        }
+        await PostModel.findByIdAndDelete({ _id: id });
+        res.status(200).json({ msg: 'Post deleted successfully' });
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 

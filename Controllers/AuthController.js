@@ -1,7 +1,7 @@
 import UserModel from '../Models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+//import {asyncHandler} from '../Utils/asyncHandler.js'
 
 
 export async function login(req, res) {
@@ -44,7 +44,7 @@ export async function signup(req, res) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await UserModel.create({ username, email, password: hashedPassword });
-       // newUser.password = undefined;
+        // newUser.password = undefined;
 
         const token = jwt.sign({ id: newUser._id, email }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
@@ -86,8 +86,13 @@ export async function profile(req, res) {
         res.status(200).json({ _id: profileInfo._id, username: profileInfo.username, email: profileInfo.email });
     }
     catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: 'Token is Expired' });
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ msg: 'Invalid token'});
+        } else if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ msg: 'Token has expired' });
+        } else {
+            return res.status(500).json({ msg: 'Internal Server Error' });
+        }
     }
 }
 
