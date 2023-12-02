@@ -83,11 +83,16 @@ export async function profile(req, res) {
         const { id } = response;
         const profileInfo = await UserModel.findOne({ _id: id });
         // profileInfo.password = undefined
-        res.status(200).json({ _id: profileInfo._id, username: profileInfo.username, email: profileInfo.email });
+        res.status(200).json(
+            {
+                username: profileInfo.username,
+                _id: profileInfo._id,
+                email: profileInfo.email
+            });
     }
     catch (error) {
         if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ msg: 'Invalid token'});
+            return res.status(401).json({ msg: 'Invalid token' });
         } else if (error.name === 'TokenExpiredError') {
             return res.status(401).json({ msg: 'Token has expired' });
         } else {
